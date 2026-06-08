@@ -2,12 +2,11 @@
 import { useState } from 'react'
 import Link from 'next/link'
 
-// Define available class keys and paper type keys
 type ClassKey = '12' | '11' | '10' | '9' | '8' | '7'
 type PaperTypeKey = 'previous' | 'sample' | 'syllabus' | 'revisionNotes' | 'markingScheme' | 'caseStudy' | 'assertionReason'
 
-// Explicitly typed papers data (satisfies ensures the shape matches the type)
-const papersData = {
+// Removed `as const` – now TypeScript will infer arrays as regular arrays (not tuples)
+const papersData: Record<ClassKey, Record<PaperTypeKey, { subject: string; year: string; sets: string; marking: string; medium: string; pdf: string; isExternal: boolean }[]>> = {
   '12': {
     previous: [
       { subject: 'All Subjects', year: '2015-2025', sets: 'Multiple', marking: '✅', medium: 'English/Hindi', pdf: 'https://infinitylearn.com/cbse-board/class-12-previous-year-question-papers', isExternal: true },
@@ -146,13 +145,12 @@ const papersData = {
       { subject: 'Science, Maths', year: '2025–26', sets: '', marking: '', medium: 'English', pdf: 'https://oswalpublishers.com/cbse/competency-focused-practice-questions-class-7/science/', isExternal: true },
     ],
   },
-} as const
+}
 
 export default function CBSEPage() {
   const [selectedClass, setSelectedClass] = useState<ClassKey>('12')
   const [paperType, setPaperType] = useState<PaperTypeKey>('previous')
 
-  // Now TypeScript knows that selectedClass is a valid key of papersData
   const currentData = papersData[selectedClass]?.[paperType] || []
 
   const renderLink = (item: any) => {
