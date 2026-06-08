@@ -1,9 +1,12 @@
 import Link from 'next/link'
 
 export default function Footer() {
+  const currentYear = new Date().getFullYear()
+
   return (
     <footer className="bg-gray-900 text-gray-400 pt-12 pb-6 mt-12">
       <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-8">
+        {/* Brand Column */}
         <div>
           <div className="flex items-center gap-2 mb-3">
             <span className="text-2xl">📚</span>
@@ -15,6 +18,8 @@ export default function Footer() {
             <span className="text-xs bg-gray-800 px-2 py-1 rounded">🇮🇳 Made in India</span>
           </div>
         </div>
+
+        {/* Quick Links */}
         <div>
           <h4 className="text-white font-semibold mb-3">Quick Links</h4>
           <ul className="space-y-2 text-sm">
@@ -24,6 +29,8 @@ export default function Footer() {
             <li><Link href="/icse">ICSE / ISC</Link></li>
           </ul>
         </div>
+
+        {/* Students */}
         <div>
           <h4 className="text-white font-semibold mb-3">Students</h4>
           <ul className="space-y-2 text-sm">
@@ -33,17 +40,22 @@ export default function Footer() {
             <li><Link href="/tools">Study Tools</Link></li>
           </ul>
         </div>
+
+        {/* Legal */}
         <div>
           <h4 className="text-white font-semibold mb-3">Legal</h4>
           <ul className="space-y-2 text-sm">
             <li><Link href="/privacy">Privacy Policy</Link></li>
             <li><Link href="/terms">Terms of Use</Link></li>
+            <li><Link href="/dmca">DMCA / Copyright</Link></li>
             <li><Link href="/contact">Contact</Link></li>
           </ul>
         </div>
       </div>
+
+      {/* Copyright */}
       <div className="text-center text-xs text-gray-500 pt-8 mt-8 border-t border-gray-800">
-        © 2025 VidyaPath – Free Education for All
+        © {currentYear} VidyaPath – Free Education for All
       </div>
     </footer>
   )
