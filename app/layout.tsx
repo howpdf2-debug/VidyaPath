@@ -1,9 +1,9 @@
 ﻿
 
 import './globals.css'
-
 import type { Metadata } from 'next'
 import { DM_Sans } from 'next/font/google'
+import Script from 'next/script'
 import './globals.css'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
@@ -22,6 +22,24 @@ export default function RootLayout({
 }) {
   return (
     <html lang="hi">
+      <head>
+        {/* Google Search Console verification (replace with your actual meta tag) */}
+        <meta name="google-site-verification" content="YOUR_VERIFICATION_CODE" />
+
+        {/* Google Analytics 4 */}
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-TQSV7ZEW3T"
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-TQSV7ZEW3T');
+          `}
+        </Script>
+      </head>
       <body className={dmSans.className}>
         <Header />
         <main className="min-h-screen">{children}</main>
