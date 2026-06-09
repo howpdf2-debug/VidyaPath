@@ -1,3 +1,4 @@
+// app/sarkari-naukri/page.tsx
 'use client'
 import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase'
@@ -6,7 +7,6 @@ import Link from 'next/link'
 interface Job {
   id: string
   org: string
-  org_short: string
   title: string
   posts: number
   qual: string[]
@@ -15,7 +15,6 @@ interface Job {
   sal_min: number | null
   sal_max: number | null
   last_date: string
-  apply_url: string
   status: string
   category: string
 }
@@ -50,14 +49,8 @@ export default function JobsPage() {
   async function fetchJobs() {
     setLoading(true)
     let query = supabase.from('jobs').select('*').eq('status', 'open')
-
-    if (selectedCategory !== 'all') {
-      query = query.eq('category', selectedCategory)
-    }
-    if (selectedQual !== 'all') {
-      query = query.contains('qual', [selectedQual])
-    }
-
+    if (selectedCategory !== 'all') query = query.eq('category', selectedCategory)
+    if (selectedQual !== 'all') query = query.contains('qual', [selectedQual])
     const { data, error } = await query.order('last_date', { ascending: true })
     if (!error && data) setJobs(data)
     setLoading(false)
@@ -93,7 +86,7 @@ export default function JobsPage() {
         <p className="text-green-100 mt-1">रेलवे, बैंकिंग, SSC, पुलिस – प्रतिदिन नई अपडेट्स। सीधे आवेदन लिंक के साथ।</p>
       </div>
 
-      {/* Stats cards */}
+      {/* Stats Cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8">
         <div className="bg-white p-3 rounded-xl text-center shadow-sm border">
           <div className="text-xl font-bold text-green-600">{jobs.length}+</div>
@@ -123,15 +116,7 @@ export default function JobsPage() {
       <div className="mb-6">
         <div className="flex flex-wrap gap-2 mb-3">
           {categories.map(cat => (
-            <button
-              key={cat.id}
-              onClick={() => setSelectedCategory(cat.id)}
-              className={`px-4 py-1.5 rounded-full text-sm font-medium transition ${
-                selectedCategory === cat.id
-                  ? 'bg-purple-600 text-white'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-              }`}
-            >
+            <button key={cat.id} onClick={() => setSelectedCategory(cat.id)} className={`px-4 py-1.5 rounded-full text-sm font-medium transition ${selectedCategory === cat.id ? 'bg-purple-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}>
               {cat.label}
             </button>
           ))}
@@ -139,57 +124,34 @@ export default function JobsPage() {
         <div className="flex flex-wrap gap-2">
           <span className="text-sm font-medium text-gray-500 mr-1">योग्यता:</span>
           {qualifications.map(q => (
-            <button
-              key={q.id}
-              onClick={() => setSelectedQual(q.id)}
-              className={`px-3 py-1 rounded-full text-xs font-medium transition ${
-                selectedQual === q.id
-                  ? 'bg-purple-600 text-white'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-              }`}
-            >
+            <button key={q.id} onClick={() => setSelectedQual(q.id)} className={`px-3 py-1 rounded-full text-xs font-medium transition ${selectedQual === q.id ? 'bg-purple-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}>
               {q.label}
             </button>
           ))}
         </div>
       </div>
 
-      {/* Jobs grid */}
+      {/* Jobs Grid */}
       {loading ? (
         <div className="text-center py-12">लोड हो रहा है...</div>
       ) : jobs.length === 0 ? (
-        <div className="text-center py-12 text-gray-500 border rounded-xl">
-          कोई नौकरी नहीं मिली। फ़िल्टर बदलकर देखें।
-        </div>
+        <div className="text-center py-12 text-gray-500 border rounded-xl">कोई नौकरी नहीं मिली। फ़िल्टर बदलकर देखें।</div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {jobs.map(job => (
             <div key={job.id} className="bg-white rounded-xl border shadow-sm hover:shadow-md transition p-4">
               <div className="text-xs font-semibold text-purple-600 mb-1">{job.org}</div>
-              <div className="font-bold text-gray-900 text-base mb-2">
-                {job.title} — {job.posts?.toLocaleString('en-IN')} पद
-              </div>
+              <div className="font-bold text-gray-900 text-base mb-2">{job.title} — {job.posts?.toLocaleString('en-IN')} पद</div>
               <div className="flex flex-wrap gap-1 mb-3">
-                {job.qual?.map(q => (
-                  <span key={q} className="text-xs bg-gray-100 px-2 py-0.5 rounded">{q}</span>
-                ))}
-                <span className="text-xs bg-gray-100 px-2 py-0.5 rounded">
-                  आयु: {job.age_min ?? '?'}–{job.age_max ?? '?'}
-                </span>
-                <span className="text-xs bg-gray-100 px-2 py-0.5 rounded">
-                  {formatSalary(job.sal_min, job.sal_max)}
-                </span>
+                {job.qual?.map(q => <span key={q} className="text-xs bg-gray-100 px-2 py-0.5 rounded">{q}</span>)}
+                <span className="text-xs bg-gray-100 px-2 py-0.5 rounded">आयु: {job.age_min ?? '?'}–{job.age_max ?? '?'}</span>
+                <span className="text-xs bg-gray-100 px-2 py-0.5 rounded">{formatSalary(job.sal_min, job.sal_max)}</span>
               </div>
               <div className="flex justify-between items-center mt-3">
                 <span className="text-xs font-semibold text-red-600">{daysLeft(job.last_date)}</span>
-                <a
-                  href={job.apply_url}
-                  target="_blank"
-                  rel="nofollow noopener noreferrer"
-                  className="bg-green-600 text-white text-xs px-4 py-1.5 rounded-lg hover:bg-green-700"
-                >
-                  आवेदन करें ↗
-                </a>
+                <Link href={`/sarkari-naukri/${job.id}`} className="bg-purple-600 text-white text-xs px-4 py-1.5 rounded-lg hover:bg-purple-700">
+                  विवरण देखें →
+                </Link>
               </div>
             </div>
           ))}
