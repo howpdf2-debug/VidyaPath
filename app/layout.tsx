@@ -12,7 +12,7 @@ const dmSans = DM_Sans({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
   title: 'VidyaPath — Free NCERT, CBSE, Sarkari Naukri | India ka Study Portal',
-  description: 'NCERT Solutions, CBSE Papers, State Boards, Sarkari Naukri — sab free, Hindi + English.',
+  description: 'Free NCERT solutions, CBSE sample papers, state board resources, government job alerts, and study tools for Indian students. 100% free, Hindi + English.',
 }
 
 export default function RootLayout({
